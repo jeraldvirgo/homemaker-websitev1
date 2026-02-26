@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #F8F8F8;
+    color: #2B2B2B;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+}
+
+header {
+    background: #D6281F;
+    padding: 15px 0;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 55px;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-nav {
+    background: #F4B400;
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: #000;
+}
+
+.hero {
+    background: url('../images/hero-banner.jpg') center/cover no-repeat;
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero h1 {
+    font-size: 50px;
+}
+
+.btn-primary {
+    background: #F4B400;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: #000;
+    text-decoration: none;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: #D6281F;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.grid {
+    display: flex;
+    gap: 25px;
+    margin-top: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 280px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.highlight {
+    background: white;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.food-card {
+    background: #F8F8F8;
+    padding: 15px;
+    border-radius: 15px;
+    width: 250px;
+}
+
+.food-card img {
+    width: 100%;
+    border-radius: 12px;
+}
+
+footer {
+    background: #D6281F;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+@media(max-width:768px){
+    .hero h1 {
+        font-size: 32px;
+    }
+}
