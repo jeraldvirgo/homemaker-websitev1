@@ -312,18 +312,48 @@
         </div>
         <div class="contact-form fade-up">
           <h3>How can we help you?</h3>
-          <div class="form-row">
-            <div class="form-group"><label>FIRST NAME</label><input type="text" placeholder="Your name"></div>
-            <div class="form-group"><label>LAST NAME</label><input type="text" placeholder="Last name"></div>
-          </div>
-          <div class="form-group"><label>EMAIL ADDRESS</label><input type="email" placeholder="you@example.com"></div>
-          <div class="form-group"><label>PHONE NUMBER</label><input type="tel" placeholder="+91 00000 00000"></div>
-          <div class="form-group"><label>YOUR MESSAGE</label><textarea placeholder="Tell us how we can help..."></textarea></div>
-          <div class="form-group" style="display:flex;align-items:flex-start;gap:10px">
-            <input type="checkbox" id="terms" style="width:auto;margin-top:3px">
-            <label for="terms" style="font-size:.78rem;font-weight:500;letter-spacing:0;color:var(--muted);cursor:pointer">I accept the terms & conditions and understand that my data will be held securely in accordance with the privacy policy.</label>
-          </div>
-          <button class="btn-primary">Send Message</button>
+
+          <form id="contactForm" action="https://formspree.io/f/xgonzdod" method="POST">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>FIRST NAME</label>
+                <input type="text" name="first_name" placeholder="Your name" required>
+              </div>
+
+              <div class="form-group">
+                <label>LAST NAME</label>
+                <input type="text" name="last_name" placeholder="Last name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>EMAIL ADDRESS</label>
+              <input type="text" id="email" name="email" placeholder="you@example.com" required>
+              <small class="error" id="emailError"></small>
+            </div>
+
+            <div class="form-group">
+              <label>PHONE NUMBER</label>
+              <input type="text" id="phone" name="phone" maxlength="10" placeholder="9876543210" required>
+              <small class="error" id="phoneError"></small>
+            </div>
+
+            <div class="form-group">
+              <label>YOUR MESSAGE</label>
+              <textarea name="message" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Send Message</button>
+
+            <div class="progress-container">
+              <div id="progressBar"></div>
+            </div>
+
+            <p id="successMessage" style="display:none;margin-top:10px;color:green;font-weight:500;">
+            </p>
+
+          </form>
         </div>
       </div>
     </div>
@@ -339,8 +369,7 @@
           <img src="images/icon.png" alt="The Home Makers Logo">
         </div>
         <div class="footer-logo-text">
-          <div class="l1">THE HOME</div>
-          <div class="l2">MAKERS</div>
+          <div class="l1">TheHomeMakers</div>
           <div class="l3">CONNECTING <span>LOCALS</span></div>
         </div>
       </div>
@@ -359,35 +388,177 @@
 </template>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === id));
-  const pg = document.getElementById('page-' + id);
-  if (!pg.querySelector('footer')) pg.appendChild(document.getElementById('footer-tpl').content.cloneNode(true));
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(observeFades, 100);
-  closeMenu();
-}
-function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
-function closeMenu() { document.getElementById('navLinks').classList.remove('open'); }
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === id));
+    const pg = document.getElementById('page-' + id);
+    if (!pg.querySelector('footer')) pg.appendChild(document.getElementById('footer-tpl').content.cloneNode(true));
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    setTimeout(observeFades, 100);
+    closeMenu();
+  }
 
-const obs = new IntersectionObserver(e => e.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.15 });
-function observeFades() { document.querySelectorAll('.page.active .fade-up:not(.visible)').forEach(el => obs.observe(el)); }
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
 
-const statObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const el = e.target, target = parseInt(el.dataset.target), dur = 1800; let start;
-    const tick = ts => { if (!start) start = ts; const p = Math.min((ts-start)/dur,1), ease=1-Math.pow(1-p,3); el.textContent = Math.floor(ease*target).toLocaleString()+'+'; if(p<1) requestAnimationFrame(tick); };
-    requestAnimationFrame(tick); statObs.unobserve(el);
+  function closeMenu() {
+    document.getElementById('navLinks').classList.remove('open');
+  }
+
+  const obs = new IntersectionObserver(e => e.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  }), {threshold: 0.15});
+
+  function observeFades() {
+    document.querySelectorAll('.page.active .fade-up:not(.visible)').forEach(el => obs.observe(el));
+  }
+
+  const statObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target, target = parseInt(el.dataset.target), dur = 1800;
+      let start;
+      const tick = ts => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / dur, 1), ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(ease * target).toLocaleString() + '+';
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      statObs.unobserve(el);
+    });
+  }, {threshold: 0.5});
+
+  const hp = document.getElementById('page-home');
+  hp.appendChild(document.getElementById('footer-tpl').content.cloneNode(true));
+  observeFades();
+  document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
+  //Contact code
+
+    const phoneInput = document.getElementById("phone");
+    const emailInput = document.getElementById("email");
+
+    const phoneError = document.getElementById("phoneError");
+    const emailError = document.getElementById("emailError");
+
+    const form = document.getElementById("contactForm");
+
+    const progressContainer = document.querySelector(".progress-container");
+    const progressBar = document.getElementById("progressBar");
+
+
+    // Allow digits only in phone
+    phoneInput.addEventListener("input", function(){
+    this.value = this.value.replace(/\D/g, '');
   });
-}, { threshold: 0.5 });
 
-const hp = document.getElementById('page-home');
-hp.appendChild(document.getElementById('footer-tpl').content.cloneNode(true));
-observeFades();
-document.querySelectorAll('[data-target]').forEach(el => statObs.observe(el));
+
+    // Email validation
+    function validateEmail(){
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!pattern.test(emailInput.value)){
+    emailError.textContent="Enter valid email (example@mail.com)";
+    return false;
+  }
+
+    emailError.textContent="";
+    return true;
+  }
+
+
+    // Phone validation
+    function validatePhone(){
+
+    if(phoneInput.value.length !== 10){
+    phoneError.textContent="Phone must be exactly 10 digits";
+    return false;
+  }
+
+    phoneError.textContent="";
+    return true;
+  }
+
+
+    // Validate on leaving field
+    emailInput.addEventListener("blur", validateEmail);
+    phoneInput.addEventListener("blur", validatePhone);
+
+
+    // Form submit
+  form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    if(!validateEmail() || !validatePhone()){
+      return;
+    }
+
+    progressContainer.style.display = "block";
+
+    let progress = 0;
+
+    const fakeProgress = setInterval(()=>{
+      progress += 10;
+      progressBar.style.width = progress + "%";
+
+      if(progress >= 90){
+        clearInterval(fakeProgress);
+      }
+    },100);
+
+    try{
+
+      const formData = new FormData(form);
+
+      const response = await fetch(form.action,{
+        method:"POST",
+        body:formData,
+        headers:{ "Accept":"application/json" }
+      });
+
+      progressBar.style.width="100%";
+
+      const successMessage = document.getElementById("successMessage");
+
+      if(response.ok){
+
+        successMessage.innerText = "✅ Message sent successfully!";
+        successMessage.style.display = "block";
+        successMessage.style.color = "green";
+
+        form.reset();
+
+      }else{
+
+        successMessage.innerText = "❌ Failed to send message";
+        successMessage.style.display = "block";
+        successMessage.style.color = "red";
+
+      }
+
+    }catch(error){
+
+      const successMessage = document.getElementById("successMessage");
+
+      successMessage.innerText = "❌ Network error. Please try again.";
+      successMessage.style.display = "block";
+      successMessage.style.color = "red";
+
+      console.error(error);
+
+    }
+
+    setTimeout(()=>{
+      progressContainer.style.display="none";
+      progressBar.style.width="0%";
+    },1200);
+
+  });
+
+
 </script>
 </body>
 </html>
